@@ -38,21 +38,28 @@ public class Task2 {
     }
 
     static String getFlatLocation(int floorAmount, int entranceAmount, int flatNumber) {
-        if (flatNumber <= 0 || flatNumber > floorAmount * entranceAmount * 4) {
+        int flatAtFloor = 4; // flatAtFloor - количество квартир на этаже
+        if (flatNumber > floorAmount * entranceAmount * flatAtFloor) {
             return "Такой квартиры не существует";
         }
-        if (floorAmount <= 0 || entranceAmount <= 0) {
+        if (floorAmount <= 0 || entranceAmount <= 0 || flatNumber <= 0) {
             return "Некорректные входные данные";
         }
-        int block = flatNumber / 4; // block - площадка из 4 квартир на одном этаже
-        int entrance = (flatNumber % (floorAmount * 4) != 0) ? (block / floorAmount + 1) : block / floorAmount;
-        int floor = (flatNumber % 4 == 0 ? (block - (entrance - 1) * floorAmount) : (block - (entrance - 1) * floorAmount + 1));
+        int block = flatNumber / flatAtFloor; // block - площадка из 4 квартир на одном этаже
+        int entranceNumber = block / floorAmount; // вычисляем номер подъезда
+        int entrance = flatNumber % (floorAmount * flatAtFloor) != 0 // entrance - номер подъезда, начиная с первого
+                ? entranceNumber + 1
+                : entranceNumber;
+        int floorNumber = block - (entrance - 1) * floorAmount; // вычисляем номер этажа
+        int floor = flatNumber % flatAtFloor != 0 // номер этажа, начиная с первого
+                ? floorNumber + 1
+                : floorNumber;
 
-        return flatNumber + " кв - " + entrance + " подъезд, " + floor + " этаж" + getFlatPosition(flatNumber);
+        return flatNumber + " кв - " + entrance + " подъезд, " + floor + " этаж" + getFlatPosition(flatNumber, flatAtFloor);
     }
 
-    static String getFlatPosition(int flatNumber) {
-        return switch (flatNumber % 4) {
+    static String getFlatPosition(int flatNumber, int flatAtFloor) {
+        return switch (flatNumber % flatAtFloor) {
             case 1 -> ", слева от лифта, влево";
             case 2 -> ", слева от лифта, вправо";
             case 3 -> ", справа от лифта, влево";
