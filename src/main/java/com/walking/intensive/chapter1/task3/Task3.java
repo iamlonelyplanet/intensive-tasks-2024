@@ -25,11 +25,11 @@ package com.walking.intensive.chapter1.task3;
  */
 public class Task3 {
     public static void main(String[] args) {
-    int year = 2020;
+        int year = 2000;
         System.out.println(isLeap(year));
     }
 
     static boolean isLeap(int year) {
-        return year % 400 == 0 || (year % 100 != 0 && year % 4 == 0);// Заглушка. При реализации - удалить
+        return year % 400 == 0 || year % 100 != 0 && year % 4 == 0;
     }
 }
