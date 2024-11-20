@@ -33,11 +33,7 @@ package com.walking.intensive.chapter1.task2;
  */
 public class Task2 {
     public static void main(String[] args) {
-
-        int floorAmount = 4;
-        int entranceAmount = 3;
-        int flatNumber = 17;
-
+        
         System.out.print(getFlatLocation(4, 3, 17));
     }
 
