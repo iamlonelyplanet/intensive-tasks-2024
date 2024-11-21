@@ -63,7 +63,7 @@ public class Task5 {
             return new double[0];
         }
         double[] heights = new double[3];
-        double twoAreas = 2 * getAreaByHeron(a, b, c);
+        double twoAreas = 2 * getAreaByHeron(a, b, c); // h(a)=2S/a
         heights[0] = twoAreas / a;
         heights[1] = twoAreas / b;
         heights[2] = twoAreas / c;
