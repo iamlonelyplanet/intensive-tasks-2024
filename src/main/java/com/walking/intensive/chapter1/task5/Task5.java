@@ -67,9 +67,6 @@ public class Task5 {
         heights[0] = twoAreas / a;
         heights[1] = twoAreas / b;
         heights[2] = twoAreas / c;
-        System.out.println(heights[0]);
-        System.out.println(heights[1]);
-        System.out.println(heights[2]);
         Arrays.sort(heights);
         return heights;
     }
@@ -125,9 +122,9 @@ public class Task5 {
             return new double[0];
         }
         double[] angles = new double[3];
-        angles[0] = Math.toDegrees(Math.acos((Math.pow (a, 2) + Math.pow (c, 2) - Math.pow (b, 2)) / (2 * a * c)));
-        angles[1] = Math.toDegrees(Math.acos((Math.pow (b, 2) + Math.pow (a, 2) - Math.pow (c, 2)) / (2 * b * a)));
-        angles[2] = Math.toDegrees(Math.acos((Math.pow (c, 2) + Math.pow (b, 2) - Math.pow (a, 2)) / (2 * c * b)));
+        angles[0] = Math.toDegrees(Math.acos((Math.pow(a, 2) + Math.pow(c, 2) - Math.pow(b, 2)) / (2 * a * c)));
+        angles[1] = Math.toDegrees(Math.acos((Math.pow(b, 2) + Math.pow(a, 2) - Math.pow(c, 2)) / (2 * b * a)));
+        angles[2] = Math.toDegrees(Math.acos((Math.pow(c, 2) + Math.pow(b, 2) - Math.pow(a, 2)) / (2 * c * b)));
         Arrays.sort(angles);
         return angles;
     }
@@ -179,7 +176,7 @@ public class Task5 {
             return -1;
         }
         double cosinusA = (Math.pow(b, 2) + Math.pow(c, 2) - Math.pow(a, 2)) / (2 * b * c);
-        double sinusA = Math.sqrt(1-Math.pow(cosinusA, 2)); // в радианах!
+        double sinusA = Math.sqrt(1 - Math.pow(cosinusA, 2)); // в радианах!
         // S = 1/2ab sin(c) - площадь через 2 стороны и угол
         return b * c * sinusA / 2;
     }
