@@ -1,5 +1,7 @@
 package com.walking.intensive.chapter2.task6;
 
+import java.util.Arrays;
+
 /**
  * Реализуйте представленные ниже методы для расчета
  * НОК (наименьшее общее кратное) и НОД (наибольший общий делитель).
@@ -8,7 +10,14 @@ package com.walking.intensive.chapter2.task6;
  */
 public class Task6 {
     public static void main(String[] args) {
-//        Для собственных проверок можете делать любые изменения в этом методе
+        int m = 515;
+        int n = 516;
+        System.out.println(Arrays.toString(getAllDivisors(m)));
+        System.out.println(Arrays.toString(getAllDivisors(n)));
+        System.out.println(getGcd(m, n));
+        System.out.println(getLcm(m, n));
+        System.out.println(getGcdByEuclideanAlgorithm(m, n));
+
     }
 
     /**
@@ -18,9 +27,12 @@ public class Task6 {
      *
      * <p>Если входные данные некорректны - метод должен возвращать -1.
      */
-    static int getLcm(int m, int n) {
-        // Ваш код
-        return 0;
+    static int getLcm(int m, int n) { // Это НОК
+        if (isWrong(m, n)) {
+            return -1;
+        }
+
+        return m * n / getGcd(m, n); // Если знать НОД (а мы знаем!), то НОК=mn/НОД
     }
 
     /**
@@ -30,9 +42,19 @@ public class Task6 {
      *
      * <p>Если входные данные некорректны - метод должен возвращать -1.
      */
-    static int getGcd(int m, int n) {
-        // Ваш код
-        return 0;
+    static int getGcd(int m, int n) { // Это НОД
+        if (isWrong(m, n)) {
+            return -1;
+        }
+
+        int minimalNumber = Math.min(m, n);
+        int gcd = 1;
+        for (int i = gcd; i <= minimalNumber; i++) {
+            if (isDividedWithoutRemainder(m, i) && isDividedWithoutRemainder(n, i)) {
+                gcd = i;
+            }
+        }
+        return gcd;
     }
 
     /**
@@ -44,7 +66,42 @@ public class Task6 {
      * <p>Если входные данные некорректны - метод должен возвращать -1.
      */
     static int getGcdByEuclideanAlgorithm(int m, int n) {
-        // Ваш код
-        return 0;
+        if (isWrong(m, n)) {
+            return -1;
+        }
+        int largestNumber = Math.max(m, n);
+        int lowestNumber = Math.min(m, n);
+        while (largestNumber != lowestNumber) {
+            int temporaryGcd = largestNumber - lowestNumber;
+            largestNumber = Math.max(temporaryGcd, lowestNumber);
+            lowestNumber = Math.min(temporaryGcd, lowestNumber);
+        }
+        return lowestNumber;
+    }
+
+    static boolean isDividedWithoutRemainder(int n, int i) { // Проверка, делятся ли числа без остатка
+        return (n % i == 0);
+    }
+
+    static int[] getAllDivisors(int number) { // Знаю про запрет массивов. Это чисто для себя и наглядности вычислений.
+        if (number <= 1) {
+            return new int[0];
+        }
+
+        int[] divisors = new int[number];
+        int i;
+        int counter = 0;
+        for (i = 1; i <= number; i++) {
+            if (isDividedWithoutRemainder(number, i)) {
+                divisors[counter] = i;
+                counter++;
+            }
+        }
+        divisors = Arrays.stream(divisors).filter(num -> num != 0).toArray();
+        return divisors;
+    }
+
+    static boolean isWrong(int m, int n) { // Проверяем, корректны ли входные данные
+        return (m <= 0 || n <= 0);
     }
 }
