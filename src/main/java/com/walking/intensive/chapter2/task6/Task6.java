@@ -32,7 +32,7 @@ public class Task6 {
             return -1;
         }
 
-        return m * n / getGcd(m, n); // Если знать НОД (а мы знаем!), то НОК=mn/НОД
+        return m * n / getGcd(m, n); // Если знать НОД (а мы знаем!), то НОК = mn/НОД
     }
 
     /**
