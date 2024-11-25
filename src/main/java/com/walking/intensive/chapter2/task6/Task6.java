@@ -17,7 +17,7 @@ public class Task6 {
         System.out.println(getGcd(m, n));
         System.out.println(getLcm(m, n));
         System.out.println(getGcdByEuclideanAlgorithm(m, n));
-
+        // Вот эти все sout - они для самопроверки.
     }
 
     /**
@@ -28,7 +28,7 @@ public class Task6 {
      * <p>Если входные данные некорректны - метод должен возвращать -1.
      */
     static int getLcm(int m, int n) { // Это НОК
-        if (isWrong(m, n)) {
+        if (m <= 0 || n <= 0) {
             return -1;
         }
 
@@ -43,7 +43,7 @@ public class Task6 {
      * <p>Если входные данные некорректны - метод должен возвращать -1.
      */
     static int getGcd(int m, int n) { // Это НОД
-        if (isWrong(m, n)) {
+        if (m <= 0 || n <= 0) {
             return -1;
         }
 
@@ -66,16 +66,31 @@ public class Task6 {
      * <p>Если входные данные некорректны - метод должен возвращать -1.
      */
     static int getGcdByEuclideanAlgorithm(int m, int n) {
-        if (isWrong(m, n)) {
+        if (m <= 0 || n <= 0) {
             return -1;
         }
         int largestNumber = Math.max(m, n);
         int lowestNumber = Math.min(m, n);
+        while (lowestNumber != largestNumber) {
+            int temporaryGcd = largestNumber - lowestNumber;
+            return getGcdByEuclideanAlgorithm(temporaryGcd, lowestNumber);
+        }
+        /*
+        Ниже - второе решение, с рекурсией и for, оставляю для себя
+        for (int i = lowestNumber; i > 1; i--) {
+            if (lowestNumber == largestNumber) {
+                return lowestNumber;
+            }
+            int temp = largestNumber - lowestNumber;
+            return getGcdByEuclideanAlgorithm(temp, lowestNumber);
+        }
+
+        Ниже - первое решение, без рекурсии, оставлю для себя.
         while (largestNumber != lowestNumber) {
             int temporaryGcd = largestNumber - lowestNumber;
             largestNumber = Math.max(temporaryGcd, lowestNumber);
             lowestNumber = Math.min(temporaryGcd, lowestNumber);
-        }
+        } */
         return lowestNumber;
     }
 
@@ -101,7 +116,8 @@ public class Task6 {
         return divisors;
     }
 
-    static boolean isWrong(int m, int n) { // Проверяем, корректны ли входные данные
+    /*  Оставлю это для себя в виде комментария, на будущее
+        static boolean isWrong(int m, int n) { // Проверяем, корректны ли входные данные
         return (m <= 0 || n <= 0);
-    }
+    } */
 }
