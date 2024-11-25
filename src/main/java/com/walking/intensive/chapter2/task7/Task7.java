@@ -27,11 +27,37 @@ package com.walking.intensive.chapter2.task7;
  */
 public class Task7 {
     public static void main(String[] args) {
-//        Для собственных проверок можете делать любые изменения в этом методе
+        int n = 1_000_000;
+        System.out.println(getFriendlyPair(n));
     }
 
-    static int getFriendlyPair(int n) {
-        // Ваш код
-        return 0;
+    static int getFriendlyPair(int number) {
+        if (number < 2 || number > 1000000) {
+            return -1;
+        }
+        while (number > 0) {
+            int largestNumber = getDivisorsSum(number);
+            if (getDivisorsSum(largestNumber) == number && largestNumber != number) {
+                return number;
+            }
+            number--;
+        }
+
+        return number;
+    }
+
+    static int getDivisorsSum(int n) {
+        int divisorsSum = 1; // Сумму делителей начнём с 1 вместо 0: делители включают в себя 1.
+        int i;
+        for (i = 2; i <= n / 2; i++) { // Делим n на два: для n невозможны делители выше n/2.
+            if (divisorsSum > n) { // нет смысла проверять, когда сумма делителей превысила второе число.
+                return 0;
+            }
+            if (n % i == 0) {
+                divisorsSum = divisorsSum + i;
+            }
+        }
+
+        return divisorsSum;
     }
 }
