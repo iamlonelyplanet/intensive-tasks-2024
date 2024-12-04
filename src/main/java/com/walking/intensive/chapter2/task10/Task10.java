@@ -23,7 +23,7 @@ public class Task10 {
             return false;
         }
 
-        // Удаляем пробелы и разные знаки препинания, затем переводим всё в нижний регистр
+        // Удаляем пробелы и знаки препинания, затем переводим всё в нижний регистр
         inputString = inputString.replace(" ", "");
         inputString = inputString.replace(".", "");
         inputString = inputString.replace("!", "");
