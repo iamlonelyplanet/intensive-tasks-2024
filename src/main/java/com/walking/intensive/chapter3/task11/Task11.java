@@ -1,5 +1,7 @@
 package com.walking.intensive.chapter3.task11;
 
+import java.util.Arrays;
+
 /**
  * Реализуйте метод getOddSubArraysElementsSum() с учетом условий ниже.
  *
@@ -42,11 +44,30 @@ package com.walking.intensive.chapter3.task11;
  */
 public class Task11 {
     public static void main(String[] args) {
-//        Для собственных проверок можете делать любые изменения в этом методе
+        int[] array = {1, 4, 2, 5, 3};
+        System.out.println(getOddSubArraysElementsSum(array));
     }
 
     static int getOddSubArraysElementsSum(int[] array) {
-        // Ваш код
-        return 0;
+        if (array.length == 0) {
+            return 0;
+        }
+
+        for (int a : array) {
+            if (a <= 0) {
+                return -1;
+            }
+        }
+
+        int sum = 0;
+        for (int i = 1; i <= array.length; i += 2) { // длина подмассива
+            for (int j = 0; j + i <= array.length; j++) {
+                int[] subArray = Arrays.copyOfRange(array, j, j + i);
+                for (int value : subArray) {
+                    sum = sum + value;
+                }
+            }
+        }
+        return sum;
     }
 }
