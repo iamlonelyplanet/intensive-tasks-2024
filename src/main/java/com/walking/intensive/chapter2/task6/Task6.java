@@ -28,7 +28,7 @@ public class Task6 {
      * <p>Если входные данные некорректны - метод должен возвращать -1.
      */
     static int getLcm(int m, int n) { // Это НОК
-        if (m <= 0 || n <= 0) {
+        if (isWrong(m, n)) {
             return -1;
         }
 
@@ -43,7 +43,7 @@ public class Task6 {
      * <p>Если входные данные некорректны - метод должен возвращать -1.
      */
     static int getGcd(int m, int n) { // Это НОД
-        if (m <= 0 || n <= 0) {
+        if (isWrong(m, n)) {
             return -1;
         }
 
@@ -66,15 +66,15 @@ public class Task6 {
      * <p>Если входные данные некорректны - метод должен возвращать -1.
      */
     static int getGcdByEuclideanAlgorithm(int m, int n) {
-        if (m <= 0 || n <= 0) {
+        if (m <= 0 || n < 0) {
             return -1;
         }
-        int largestNumber = Math.max(m, n);
-        int lowestNumber = Math.min(m, n);
-        while (lowestNumber != largestNumber) {
-            int temporaryGcd = largestNumber - lowestNumber;
-            return getGcdByEuclideanAlgorithm(temporaryGcd, lowestNumber);
+
+        if (n == 0) {
+            return m;
         }
+        return getGcdByEuclideanAlgorithm(n, m % n);
+    }
         /*
         Ниже - второе решение, с рекурсией и for, оставляю для себя
         for (int i = lowestNumber; i > 1; i--) {
@@ -91,8 +91,7 @@ public class Task6 {
             largestNumber = Math.max(temporaryGcd, lowestNumber);
             lowestNumber = Math.min(temporaryGcd, lowestNumber);
         } */
-        return lowestNumber;
-    }
+
 
     static boolean isDividedWithoutRemainder(int n, int i) { // Проверка, делятся ли числа без остатка
         return (n % i == 0);
@@ -116,8 +115,7 @@ public class Task6 {
         return divisors;
     }
 
-    /*  Оставлю это для себя в виде комментария, на будущее
-        static boolean isWrong(int m, int n) { // Проверяем, корректны ли входные данные
+    static boolean isWrong(int m, int n) { // Проверяем, корректны ли входные данные
         return (m <= 0 || n <= 0);
-    } */
+    }
 }
