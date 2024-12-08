@@ -1,5 +1,7 @@
 package com.walking.intensive.chapter3.task13;
 
+import java.util.Arrays;
+
 /**
  * Ваша задача - с помощью лейки полить все растения в саду.
  * Всего в саду N растений. Они расположены в ряд и слева направо помечены
@@ -49,11 +51,52 @@ package com.walking.intensive.chapter3.task13;
  */
 public class Task13 {
     public static void main(String[] args) {
-//        Для собственных проверок можете делать любые изменения в этом методе
+        int[] plants = {2, 2, 3, 3};
+        int wateringCanVolume = 5;
+        System.out.println(getStepsCount(plants, wateringCanVolume));
+        System.out.println(Arrays.toString(plants));
     }
 
     static int getStepsCount(int[] plants, int wateringCanVolume) {
-        // Ваш код
-        return 0;
+        if (!isValid(plants, wateringCanVolume)) {
+            return -1;
+        }
+
+        int gardenLength = plants.length;
+        int stepsCount = 0;
+        int wateringCanCurrentVolume = wateringCanVolume;
+
+        for (int i = 0; i < gardenLength; i++) {
+
+            while (wateringCanCurrentVolume != 0) {
+                if (wateringCanCurrentVolume >= plants[i]) {
+                    wateringCanCurrentVolume -= plants[i];
+                    plants[i] = 0;
+                    stepsCount += i + 1;
+                    break;
+                } else {
+                    stepsCount += (i + 1) * 2;
+                    wateringCanCurrentVolume = wateringCanVolume;
+                }
+            }
+            stepsCount = wateringCanCurrentVolume <= plants[i+1]
+                    ? stepsCount + 2
+                    : stepsCount + 1;
+
+
+        }
+        return stepsCount;
+    }
+
+    static boolean isValid(int[] plants, int wateringCanVolume) {
+        if (wateringCanVolume <= 0) {
+            return false;
+        }
+        for (int i : plants) {
+            if (i <= 0 || wateringCanVolume < i) {
+                return false;
+            }
+        }
+        return true;
     }
 }
