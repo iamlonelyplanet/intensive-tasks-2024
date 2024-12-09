@@ -53,8 +53,8 @@ public class Task13 {
     public static void main(String[] args) {
         int[] plants = {2, 2, 3, 3};
         int wateringCanVolume = 5;
-        System.out.println(getStepsCount(plants, wateringCanVolume));
-        System.out.println(Arrays.toString(plants));
+        System.out.println("Полили за " + getStepsCount(plants, wateringCanVolume) + " шагов");
+        System.out.println("После полива индексы должны были превратиться в нули: " + Arrays.toString(plants));
     }
 
     static int getStepsCount(int[] plants, int wateringCanVolume) {
@@ -62,36 +62,25 @@ public class Task13 {
             return -1;
         }
 
-        int gardenLength = plants.length;
         int stepsCount = 0;
         int wateringCanCurrentVolume = wateringCanVolume;
+        int i = 0;
 
-        for (int i = 0; i < gardenLength; i++) {
-
-            while (wateringCanCurrentVolume != 0) {
-                if (wateringCanCurrentVolume >= plants[i]) {
-                    wateringCanCurrentVolume -= plants[i];
-                    plants[i] = 0;
-                    stepsCount += i + 1;
-                    break;
-                } else {
-                    stepsCount += (i + 1) * 2;
-                    wateringCanCurrentVolume = wateringCanVolume;
-                }
+        while (i < plants.length) {
+            if (wateringCanCurrentVolume >= plants[i]) {
+                wateringCanCurrentVolume -= plants[i];
+                plants[i] = 0;
+                stepsCount += 1;
+                i++;
+            } else {
+                stepsCount += 2 * i;
+                wateringCanCurrentVolume = wateringCanVolume;
             }
-            stepsCount = wateringCanCurrentVolume <= plants[i+1]
-                    ? stepsCount + 2
-                    : stepsCount + 1;
-
-
         }
         return stepsCount;
     }
 
     static boolean isValid(int[] plants, int wateringCanVolume) {
-        if (wateringCanVolume <= 0) {
-            return false;
-        }
         for (int i : plants) {
             if (i <= 0 || wateringCanVolume < i) {
                 return false;
