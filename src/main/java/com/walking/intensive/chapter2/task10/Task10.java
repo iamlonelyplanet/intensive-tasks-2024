@@ -15,54 +15,56 @@ public class Task10 {
     public static void main(String[] args) {
         String inputString1 = "   Муза,   ранясь !!! )шилом (опыта), ты помолишься на разум!?!   ";
         String inputString2 = "Ежу хуже";
-        String inputString = "гааг";
+        String inputString = "гааг ";
         System.out.println(isPalindrome(inputString));
         //символы нижней кириллицы: [1072,1103] + 1105
     }
 
     static boolean isPalindrome(String inputString) {
-        if (inputString == null) {
+        if (inputString == null || inputString.length() <= 1 || inputString.length() == 0) {
             return false;
         }
 
         inputString = inputString.toLowerCase();
         int halfLength = inputString.length() / 2;
-        int odd = inputString.length() % 2 == 0 // Чётность приведённой строки. Чтобы проверить лишь до половины строки.
-                ? 1
-                : 0;
         int i = 0;
         char leftLetter = inputString.charAt(i);
         while (i <= halfLength) {
-            if ((int) leftLetter >= 1072
-                    && (int) leftLetter <= 1105
-                    && (int) leftLetter != 1104) {
+            leftLetter = inputString.charAt(i);
+            if (isCyrillicLetter(leftLetter)) {
                 leftLetter = inputString.charAt(i);
-                char rightLetter = getRightLetter(inputString, i, odd);
+                char rightLetter = getRightLetter(inputString, i);
                 System.out.println("Сравниваем букву " + leftLetter + " с буквой " + rightLetter);
                 if (leftLetter != rightLetter) {
+                    System.out.println("Они не одинаковы!");
                     return false;
                 }
             }
             i++;
         }
-
-        return leftLetter == getRightLetter(inputString, i, odd);
+        return leftLetter == getRightLetter(inputString, i - 1);
     }
 
-    static char getRightLetter(String inputString, int a, int odd) {
+    static char getRightLetter(String inputString, int a) {
         int j = inputString.length() - a - 1;
         int halfLength = inputString.length() / 2;
-        char rightLetter = inputString.charAt(halfLength - a);
-                while (j >= halfLength) {
-            if ((int) inputString.charAt(j) >= 1072
-                    && (int) inputString.charAt(j) <= 1105
-                    && (int) inputString.charAt(j) != 1104) {
+        int odd = inputString.length() % 2 == 0 // Чётность приведённой строки. Чтобы проверить лишь до половины строки.
+                ? 1
+                : 0;
+        char rightLetter = inputString.charAt(halfLength * 2 - a - odd);
+        while (j > halfLength) {
+            rightLetter = inputString.charAt(j);
+            if (isCyrillicLetter(rightLetter)) {
                 rightLetter = inputString.charAt(j);
                 break;
             }
             j--;
         }
         return rightLetter;
+    }
+
+    static boolean isCyrillicLetter(char letter) {
+        return ((int) letter >= 1072 && (int) letter <= 1105 && (int) letter != 1104);
     }
 
     static boolean isPalindromeByExceptions(String inputString) {
