@@ -1,5 +1,7 @@
 package com.walking.intensive.chapter3.task14;
 
+import java.util.Arrays;
+
 /**
  * Необходимо разработать программу, которая определяет количество объектов на радарах.
  *
@@ -32,7 +34,7 @@ package com.walking.intensive.chapter3.task14;
  * <ul>
  * <li>objectCounts[0] = 3, потому что радар с координатами (2;3) и радиусом действия 1 видит объекты с координатами
  * (1;3), (2;2) и (3;3). Всего 3 объекта.
- *</ul>
+ * </ul>
  *
  * <p>При наличии некорректных входных данных верните из метода пустой массив.
  *
@@ -43,11 +45,59 @@ package com.walking.intensive.chapter3.task14;
  */
 public class Task14 {
     public static void main(String[] args) {
-//        Для собственных проверок можете делать любые изменения в этом методе
+        int[][] objectLocations = {
+                {1, 3},
+                {3, 3},
+                {5, 3},
+                {2, 2}
+        };
+
+        int[][] radars = {
+                {2, 3, 1},
+                {4, 3, 1},
+                {1, 1, 2}
+        };
+        System.out.println(Arrays.toString(getObjectCounts(objectLocations, radars)));
     }
 
     static int[] getObjectCounts(int[][] objectLocations, int[][] radars) {
-        // Ваш код
-        return new int[0];
+        if (!isValid(objectLocations, radars)) {
+            return new int[0];
+        }
+
+        int[] objectCounts = new int[radars.length];
+        for (int i = 0; i < objectCounts.length; i++) {
+            for (int[] objectLocation : objectLocations) {
+                if (isObjectOnRadar(i, objectLocation, radars[i])) {
+                    objectCounts[i]++;
+                }
+            }
+        }
+
+        return objectCounts;
+    }
+
+    static boolean isObjectOnRadar(int i, int[] objectLocations, int[] radars) {
+        double sideA = objectLocations[0] - radars[0];
+        double sideB = objectLocations[1] - radars[1];
+        double sideC = Math.sqrt(Math.pow(sideA, 2) + Math.pow(sideB, 2));
+
+        return radars[2] >= sideC;
+    }
+
+    static boolean isValid(int[][] objectLocations, int[][] radars) {
+        for (int[] objectLocation : objectLocations) {
+            if (objectLocation.length != 2) {
+                return false;
+            }
+        }
+
+        for (int[] radar : radars) {
+            if (radar.length != 3 || radar[2] <= 0) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
