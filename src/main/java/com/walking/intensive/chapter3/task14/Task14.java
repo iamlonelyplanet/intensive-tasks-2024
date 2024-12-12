@@ -68,7 +68,7 @@ public class Task14 {
         int[] objectCounts = new int[radars.length];
         for (int i = 0; i < objectCounts.length; i++) {
             for (int[] objectLocation : objectLocations) {
-                if (isObjectOnRadar(i, objectLocation, radars[i])) {
+                if (isObjectOnRadar(objectLocation, radars[i])) {
                     objectCounts[i]++;
                 }
             }
@@ -77,7 +77,7 @@ public class Task14 {
         return objectCounts;
     }
 
-    static boolean isObjectOnRadar(int i, int[] objectLocations, int[] radars) {
+    static boolean isObjectOnRadar(int[] objectLocations, int[] radars) {
         double sideA = objectLocations[0] - radars[0];
         double sideB = objectLocations[1] - radars[1];
         double sideC = Math.sqrt(Math.pow(sideA, 2) + Math.pow(sideB, 2));
