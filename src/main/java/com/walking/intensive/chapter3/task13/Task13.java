@@ -64,19 +64,17 @@ public class Task13 {
 
         int stepsCount = 0;
         int wateringCanCurrentVolume = wateringCanVolume;
-        int i = 0;
 
-        while (i < plants.length) {
-            if (wateringCanCurrentVolume >= plants[i]) {
-                wateringCanCurrentVolume -= plants[i];
-                plants[i] = 0;
-                stepsCount += 1;
-                i++;
-            } else {
+        for (int i = 0; i < plants.length; i++) {
+            if (wateringCanCurrentVolume < plants[i]) {
                 stepsCount += 2 * i;
                 wateringCanCurrentVolume = wateringCanVolume;
             }
+            stepsCount +=1;
+            wateringCanCurrentVolume -= plants[i];
+            plants[i] = 0;
         }
+
         return stepsCount;
     }
 
