@@ -22,22 +22,23 @@ import java.util.Arrays;
  */
 public class Task16 {
     public static void main(String[] args) {
-        int[] arr1 = {4, 3, 5, 6, 7, 8};
+        int[] arr1 = {1, 2, 3, 5, 4, 5, 6};
         int[] arr2 = {5, 11, 1};
         int[] emptyArray = {};
 
         System.out.println("Одинаковая длина: " + isEqualSize(arr1, arr2)); // ok
         System.out.println("Полностью идентичны: " + isEquals(arr1, arr2)); // ok
-        System.out.println("Увеличили на единицу: " + Arrays.toString(incrementEach(emptyArray))); // ok
-        System.out.println("Перемноженный массив: " + Arrays.toString(multiplyEach(arr1, arr2))); //
-//        System.out.println("Массив после вычитания: " + Arrays.toString(subtractEach(arr1, arr2))); //пока не работает
-        System.out.println("Массив в реверсивном порядке: " + Arrays.toString(reverse(arr1))); //
-        System.out.println("После добавления целого числа: " + Arrays.toString(add(arr1, 2, 455)));
-        System.out.println(("Содержит ли число: " + isContains(arr1, 6)));
-        System.out.println(("Минимальный совпадающий индекс: " + getFirstIndex(arr1, 6)));
-        System.out.println(("Максимальный совпадающий индекс: " + getLastIndex(arr1, -24)));
-        System.out.println("После удаления числа: " + Arrays.toString(removeByIndex(arr1, 2))); // косяк?
-        System.out.println("Со смещённым индексом: " + Arrays.toString(shiftIndex(arr1)));
+        System.out.println("Увеличили на единицу: " + Arrays.toString(incrementEach(arr1))); // ok
+        System.out.println("Перемноженный массив: " + Arrays.toString(multiplyEach(arr1, arr2))); // ok
+        System.out.println("Массив после вычитания: " + Arrays.toString(subtractEach(arr1, arr2))); // ok
+        System.out.println("Массив в реверсивном порядке: " + Arrays.toString(reverse(arr1))); // ok
+        System.out.println("После добавления индекса: " + Arrays.toString(add(arr1, 2, 455))); //?
+        System.out.println(("Содержит ли число: " + isContains(arr1, 6))); // ok
+        System.out.println(("Минимальный совпадающий индекс: " + getFirstIndex(arr1, 5))); // ok
+        System.out.println(("Максимальный совпадающий индекс: " + getLastIndex(arr1, 4))); // ok
+        System.out.println("После удаления индекса: " + Arrays.toString(removeByIndex(arr1, 2))); //
+        System.out.println("Удалив несколько чисел: " + Arrays.toString(removeAll(arr1, 5, 1))); // херня
+        System.out.println("Со смещённым индексом: " + Arrays.toString(shiftIndex(arr1))); // ok
     }
 
     /**
@@ -114,7 +115,9 @@ public class Task16 {
      */
     static int[] multiplyEach(int[] arr1, int[] arr2) {
         if (arr1.length > arr2.length) {
-            return multiplyEach(arr2, arr1);
+            return multiplyEach(arr2, arr1); /* Прошу коммент от ревьюера: правильно ли я использовал тут рекурсивную
+             функцию? Цель - чтобы ниже в методе массив наименьшей (или равной) длины назывался arr1, наибольший - arr2.
+            */
         }
 
         int[] multipliedArray = new int[arr2.length];
@@ -146,17 +149,22 @@ public class Task16 {
      * <p>Возвращаемое значение: [-2,-2,2]
      */
     static int[] subtractEach(int[] arr1, int[] arr2) {
-        int[] subtractedArray = arr1.length <= arr2.length
-                ? new int[arr2.length]
-                : new int[arr1.length];
+        boolean isFirstArrayBigger = arr1.length >= arr2.length;
+        int[] subtractedArray = isFirstArrayBigger
+                ? Arrays.copyOf(arr1, arr1.length)
+                : Arrays.copyOf(arr2, arr2.length);
 
-        for (int i = 0; i < subtractedArray.length; i++) {
-            if (i == arr1.length) {
-                subtractedArray[i] = arr1[i] - arr2[i];
-            } else if (i < arr1.length) {
-                subtractedArray[i] = -arr2[i];
-            } else {
-                subtractedArray[i] = arr1[i];
+        if (isFirstArrayBigger) {
+            for (int i = 0; i < subtractedArray.length; i++) {
+                if (i < arr2.length) {
+                    subtractedArray[i] = subtractedArray[i] - arr2[i];
+                }
+            }
+        } else {
+            for (int i = 0; i < subtractedArray.length; i++) {
+                if (i >= arr1.length) {
+                    subtractedArray[i] = -arr2[i];
+                }
             }
         }
 
@@ -209,14 +217,14 @@ public class Task16 {
             for (int i = 0; i < arr.length; i++) {
                 addedArr[i] = arr[i];
             }
+
             addedArr[arr.length] = newValue;
 
         } else {
-            int i = 0;
-            while (i < index) {
+            for (int i = 0; i < index; i++) {
                 addedArr[i] = arr[i];
-                i++;
             }
+
             addedArr[index] = newValue;
 
             for (int j = index + 1; j < addedArr.length; j++) {
@@ -265,6 +273,7 @@ public class Task16 {
     static int getFirstIndex(int[] arr, int value) {
         for (int i = 0; i < arr.length; i++) {
             if (value == arr[i]) {
+
                 return i;
             }
         }
@@ -295,6 +304,7 @@ public class Task16 {
     static int getLastIndex(int[] arr, int value) {
         for (int i = arr.length - 1; i >= 0; i--) {
             if (arr[i] == value) {
+
                 return i;
             }
         }
@@ -318,26 +328,28 @@ public class Task16 {
         if (index < 0) {
             return new int[0];
         }
-        int[] removedArr = index < arr.length
+
+        int[] removedIndex = index < arr.length
                 ? new int[arr.length - 1]
                 : new int[arr.length];
 
         if (index >= arr.length) {
             for (int i = 0; i < arr.length; i++) {
-                removedArr[i] = arr[i];
+                removedIndex[i] = arr[i];
             }
-            return removedArr;
+
+            return removedIndex;
         }
 
-        for (int i = 0; i < removedArr.length; i++) {
-            if (i != index) {
-                removedArr[i] = arr[i];
-            } else {
-                removedArr[i] = arr[i + 1];
-            }
+        for (int i = 0; i < index; i++) {
+            removedIndex[i] = arr[i];
         }
 
-        return removedArr;
+        for (int j = index; j < removedIndex.length; j++) {
+            removedIndex[j] = arr[j + 1];
+        }
+
+        return removedIndex;
     }
 
     /**
@@ -351,8 +363,19 @@ public class Task16 {
      * <p>Возвращаемое значение: [10,40,50,60]
      */
     static int[] removeAll(int[] arr, int... removingValues) {
-        // Ваш код
-        return null;
+        System.out.println("Исходный массив: " + Arrays.toString(arr));
+        System.out.println("Числа для удаления: " + Arrays.toString(removingValues));
+
+        int[] removedAll = Arrays.copyOf(arr, arr.length);
+        for (int i = 0; i < arr.length; i++) {
+            for (int j = 0; j < removingValues.length; j++) {
+                if (isContains(arr, removingValues[j])) {
+                    removedAll = removeByIndex(removedAll, i);
+                }
+            }
+        }
+
+        return removedAll;
     }
 
     /**
@@ -385,8 +408,9 @@ public class Task16 {
 
         int[] shiftedArray = new int[arr.length];
         shiftedArray[0] = arr[arr.length - 1];
+
         for (int i = 1; i < arr.length; i++) {
-            shiftedArray[i] = arr[i-1];
+            shiftedArray[i] = arr[i - 1];
         }
 
         return shiftedArray;
