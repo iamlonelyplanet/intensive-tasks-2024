@@ -32,13 +32,15 @@ public class Task16 {
         System.out.println("Перемноженный массив: " + Arrays.toString(multiplyEach(arr1, arr2))); // ok
         System.out.println("Массив после вычитания: " + Arrays.toString(subtractEach(arr1, arr2))); // ok
         System.out.println("Массив в реверсивном порядке: " + Arrays.toString(reverse(arr1))); // ok
-        System.out.println("После добавления индекса: " + Arrays.toString(add(arr1, 2, 455))); //?
+        System.out.println("После добавления индекса: " + Arrays.toString(add(arr1, 2, 455))); //ok
         System.out.println(("Содержит ли число: " + isContains(arr1, 6))); // ok
         System.out.println(("Минимальный совпадающий индекс: " + getFirstIndex(arr1, 5))); // ok
         System.out.println(("Максимальный совпадающий индекс: " + getLastIndex(arr1, 4))); // ok
         System.out.println("После удаления индекса: " + Arrays.toString(removeByIndex(arr1, 2))); //
-        System.out.println("Удалив несколько чисел: " + Arrays.toString(removeAll(arr1, 5, 1))); // херня
+        System.out.println("Удалив несколько чисел: " + Arrays.toString(removeAll(arr1, 5, 1))); // ok
         System.out.println("Со смещённым индексом: " + Arrays.toString(shiftIndex(arr1))); // ok
+        System.out.println();
+        System.out.println(isSimilar(arr1, arr2));
     }
 
     /**
@@ -363,14 +365,13 @@ public class Task16 {
      * <p>Возвращаемое значение: [10,40,50,60]
      */
     static int[] removeAll(int[] arr, int... removingValues) {
-        System.out.println("Исходный массив: " + Arrays.toString(arr));
-        System.out.println("Числа для удаления: " + Arrays.toString(removingValues));
-
         int[] removedAll = Arrays.copyOf(arr, arr.length);
-        for (int i = 0; i < arr.length; i++) {
-            for (int j = 0; j < removingValues.length; j++) {
-                if (isContains(arr, removingValues[j])) {
-                    removedAll = removeByIndex(removedAll, i);
+
+        for (int removingValue : removingValues) {
+            for (int i = 0; i < removedAll.length; i++) {
+                int index = getFirstIndex(removedAll, removingValue);
+                if (index != -1) {
+                    removedAll = removeByIndex(removedAll, index);
                 }
             }
         }
@@ -385,8 +386,23 @@ public class Task16 {
      * При этом индексы элементов могут не совпадать.
      */
     static boolean isSimilar(int[] arr1, int[] arr2) {
-        // Ваш код
-        return false;
+        if (isEmpty(arr1) || isEmpty(arr2)) { // Прошу совета: эта проверка лишняя, но ускорит при пустом массиве. Так?
+            return false;
+        }
+
+        for (int i : arr1) {
+            if (!isContains(arr2, i)) {
+                return false;
+            }
+        }
+
+        for (int i : arr2) {
+            if (!isContains(arr1, i)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
