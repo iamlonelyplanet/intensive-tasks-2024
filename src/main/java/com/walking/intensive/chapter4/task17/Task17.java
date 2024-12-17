@@ -1,5 +1,7 @@
 package com.walking.intensive.chapter4.task17;
 
+import java.util.Arrays;
+
 /**
  * Смауг, живущий в пещере с золотом, был заперт внутри горы.
  * Чтобы занять свое время, он развлекал себя следующей игрой.
@@ -21,7 +23,12 @@ package com.walking.intensive.chapter4.task17;
  */
 public class Task17 {
     public static void main(String[] args) {
-//        Для собственных проверок можете делать любые изменения в этом методе
+        int[] array = {5, 1, 0, 3, -18, 44, 2, 0, 5, -5, 6};
+        System.out.println("Результат пузырьковой сортировки: " + Arrays.toString(sortByBubble(array)));
+        System.out.println("Результат QuickSort: " + Arrays.toString(sortByQuicksort(array)));
+        System.out.println(getBenchmarkOn1000());
+        System.out.println(getBenchmarkOn10000());
+
     }
 
     /**
@@ -40,9 +47,22 @@ public class Task17 {
      * </ol>
      */
     static int[] sortByBubble(int[] array) {
-        // Ваш код
-        return new int[]{};
+        if (array == null) {
+            return new int[0];
+        }
+
+        for (int i = 0; i < array.length - 1; i++) {
+            for (int j = 0; j < array.length - 1; j++) {
+                int minOfTwo = Math.min(array[j], array[j + 1]);
+                int maxOfTwo = Math.max(array[j], array[j + 1]);
+                array[j] = minOfTwo;
+                array[j + 1] = maxOfTwo;
+            }
+        }
+
+        return array;
     }
+
     /**
      * Быстрая сортировка, она же QuickSort:
      *
@@ -84,8 +104,50 @@ public class Task17 {
      * </ol>
      */
     static int[] sortByQuicksort(int[] array) {
-        // Ваш код
-        return new int[]{};
+        if (array == null) {
+            return new int[0];
+        }
+
+        if (array.length < 2) {
+            return array;
+        }
+
+        int left = 0;
+        int right = array.length - 1;
+
+        for (int i = left; i < right; i++) {
+            int minOfTwo = Math.min(array[i], array[i + 1]);
+            int maxOfTwo = Math.max(array[i], array[i + 1]);
+            array[i] = minOfTwo;
+            array[i + 1] = maxOfTwo;
+        }
+
+        for (int i = right; i > left + 1; i--) {
+            int minOfTwo = Math.min(array[left + i], array[right - i]);
+            int maxOfTwo = Math.max(array[left + i], array[right - i]);
+            array[left + i] = maxOfTwo;
+            array[right - i] = minOfTwo;
+        }
+
+        int basicElement = (array[left] + array[right]) / 2;
+
+        for (int i = left; i < right; i++) {
+            for (int j = right; j > left; j--) {
+                if (array[j] <= basicElement) {
+                    if (i <= j) {
+                        int minOfTwo = Math.min(array[i], array[i + 1]);
+                        int maxOfTwo = Math.max(array[i], array[i + 1]);
+                        array[i] = minOfTwo;
+                        array[i + 1] = maxOfTwo;
+                    }
+                }
+            }
+        }
+
+        left = getFirstIndex(array, basicElement);
+        right = getLastIndex(array, basicElement);
+
+        return array;
     }
 
     /**
@@ -97,15 +159,75 @@ public class Task17 {
      * Время выполнения - разность времени после работы алгоритма и времени до работы алгоритма
      */
     static long getBenchmarkOn1000() {
-        // Ваш код
-        return 0;
+        int[] array = getRandomArray(1000);
+
+        long startTime = System.currentTimeMillis();
+        sortByBubble(array);
+        long finishTime = System.currentTimeMillis();
+        long bubble = finishTime - startTime;
+        System.out.println("Время пузырьком на 1000 элементов: " + bubble + " мс.");
+
+        startTime = System.currentTimeMillis();
+        sortByQuicksort(array);
+        finishTime = System.currentTimeMillis();
+        long quickSort = finishTime - startTime;
+        System.out.println("Время быстрой сортировкой на 1000 элементов: " + quickSort + " мс.");
+
+        return quickSort - bubble;
     }
 
     /**
      * Повторите предыдущие вычисления из метода getBenchmarkOn1000() для массива в 10 000 элементов.
      */
     static long getBenchmarkOn10000() {
-        // Ваш код
-        return 0;
+        int[] array = getRandomArray(20000);
+
+        long startTime = System.currentTimeMillis();
+        sortByBubble(array);
+        long bubble = System.currentTimeMillis() - startTime;
+        System.out.println("Время пузырьком на 10000 элементов: " + bubble + " мс.");
+
+        startTime = System.currentTimeMillis();
+        sortByQuicksort(array);
+        long quickSort = System.currentTimeMillis() - startTime;
+        System.out.println("Время быстрой сортировкой на 10000 элементов: " + quickSort + " мс.");
+
+        return bubble - quickSort;
+    }
+
+    static int[] getRandomArray(int length) {
+        int[]randomArray = new int [length];
+        int x1 = -1_000_000;
+        int x2 = 1_000_000;
+
+        for (int i = 0; i < length; i++) {
+            double f = Math.random() / Math.nextDown(1.0);
+            int x = (int) (x1 * (1.0 - f) + x2 * f);
+            randomArray[i] = x;
+        }
+
+        return randomArray;
+    }
+
+    static int getFirstIndex(int[] arr, int value) {
+        for (int i = 0; i < arr.length; i++) {
+            if (value == arr[i]) {
+
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
+    static int getLastIndex(int[] arr, int value) {
+        for (int i = arr.length - 1; i >= 0; i--) {
+            if (arr[i] == value) {
+
+                return i;
+            }
+        }
+
+        return -1;
     }
 }
