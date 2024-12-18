@@ -24,7 +24,6 @@ public class Task16 {
     public static void main(String[] args) {
         int[] arr1 = {1, 2, 3, 5, 4, 5, 6};
         int[] arr2 = {5, 11, 1};
-        int[] emptyArray = {};
 
         System.out.println("Одинаковая длина: " + isEqualSize(arr1, arr2)); // ok
         System.out.println("Полностью идентичны: " + isEquals(arr1, arr2)); // ok
@@ -49,7 +48,7 @@ public class Task16 {
      * В остальных случаях - false.
      */
     static boolean isEqualSize(int[] arr1, int[] arr2) {
-        if (isEmpty(arr1)) { // Достаточно проверить один массив!
+        if (isEmpty(arr1)) {
             return false;
         }
 
@@ -116,20 +115,25 @@ public class Task16 {
      * <p>Возвращаемое значение: [8,15,24]
      */
     static int[] multiplyEach(int[] arr1, int[] arr2) {
-        if (arr1.length > arr2.length) {
-            return multiplyEach(arr2, arr1); /* Прошу коммент от ревьюера: правильно ли я использовал тут рекурсивную
-             функцию? Цель - чтобы ниже в методе массив наименьшей (или равной) длины назывался arr1, наибольший - arr2.
-            */
+        int[] smallerArray;
+        int[] largerArray;
+
+        if (arr1.length <= arr2.length) {
+            smallerArray = Arrays.copyOf(arr1, arr1.length);
+            largerArray = Arrays.copyOf(arr2, arr2.length);
+        } else {
+            smallerArray = Arrays.copyOf(arr2, arr2.length);
+            largerArray = Arrays.copyOf(arr1, arr1.length);
         }
 
-        int[] multipliedArray = new int[arr2.length];
+        int[] multipliedArray = new int[largerArray.length];
 
-        if (arr1.length == 0) {
+        if (isEmpty(smallerArray)) {
             return multipliedArray;
         }
 
-        for (int i = 0; i < arr1.length; i++) {
-            multipliedArray[i] = arr1[i] * arr2[i];
+        for (int i = 0; i < smallerArray.length; i++) {
+            multipliedArray[i] = smallerArray[i] * largerArray[i];
         }
 
         return multipliedArray;
@@ -151,23 +155,22 @@ public class Task16 {
      * <p>Возвращаемое значение: [-2,-2,2]
      */
     static int[] subtractEach(int[] arr1, int[] arr2) {
-        boolean isFirstArrayBigger = arr1.length >= arr2.length;
-        int[] subtractedArray = isFirstArrayBigger
-                ? Arrays.copyOf(arr1, arr1.length)
-                : Arrays.copyOf(arr2, arr2.length);
-
-        if (isFirstArrayBigger) {
-            for (int i = 0; i < subtractedArray.length; i++) {
-                if (i < arr2.length) {
-                    subtractedArray[i] = subtractedArray[i] - arr2[i];
-                }
+        if (arr1.length <= arr2.length) {
+            arr1 = Arrays.copyOf(arr1, arr2.length);
+            for (int i = arr1.length + 1; i < arr2.length; i++) {
+                arr1[i] = 0;
             }
         } else {
-            for (int i = 0; i < subtractedArray.length; i++) {
-                if (i >= arr1.length) {
-                    subtractedArray[i] = -arr2[i];
-                }
+            arr2 = Arrays.copyOf(arr2, arr1.length);
+            for (int i = arr2.length + 1; i < arr1.length; i++) {
+                arr2[i] = 0;
             }
+        }
+
+        int[] subtractedArray = new int[arr1.length];
+
+        for (int i = 0; i < arr1.length; i++) {
+            subtractedArray[i] = arr1[i] - arr2[i];
         }
 
         return subtractedArray;
@@ -386,7 +389,7 @@ public class Task16 {
      * При этом индексы элементов могут не совпадать.
      */
     static boolean isSimilar(int[] arr1, int[] arr2) {
-        if (isEmpty(arr1) || isEmpty(arr2)) { // Прошу совета: эта проверка лишняя, но ускорит при пустом массиве. Так?
+        if (isEmpty(arr1) || isEmpty(arr2)) {
             return false;
         }
 
