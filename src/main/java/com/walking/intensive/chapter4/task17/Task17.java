@@ -144,9 +144,6 @@ public class Task17 {
             }
         }
 
-        left = getFirstIndex(array, basicElement);
-        right = getLastIndex(array, basicElement);
-
         return array;
     }
 
