@@ -24,10 +24,12 @@ import java.util.Arrays;
 public class Task17 {
     public static void main(String[] args) {
         int[] array = {5, 1, 0, 3, -18, 44, 2, 0, 5, -5, 6};
+        int[] array2 = {5, 1, 0, 3, -18, 44, 2, 0, 5, -5, 6};
         System.out.println("Результат пузырьковой сортировки: " + Arrays.toString(sortByBubble(array)));
-        System.out.println("Результат QuickSort: " + Arrays.toString(sortByQuicksort(array)));
-        System.out.println(getBenchmarkOn1000());
-        System.out.println(getBenchmarkOn10000());
+        System.out.println("Результат QuickSort: " + Arrays.toString(sortByQuicksort(array2)));
+        System.out.println("Это быстрее на " + getBenchmarkOn1000() + " мс.");
+        System.out.println("Это быстрее на " + getBenchmarkOn10000() + " мс.");
+        System.out.println("Если результат отрицательный, то алгоритм КвикСорт медленнее пузырькового");
 
     }
 
@@ -112,40 +114,60 @@ public class Task17 {
             return array;
         }
 
-        int left = 0;
-        int right = array.length - 1;
+        doQuicksort(array, 0, array.length - 1);
 
-        for (int i = left; i < right; i++) {
-            int minOfTwo = Math.min(array[i], array[i + 1]);
-            int maxOfTwo = Math.max(array[i], array[i + 1]);
-            array[i] = minOfTwo;
-            array[i + 1] = maxOfTwo;
-        }
+        return array;
+    }
 
-        for (int i = right; i > left + 1; i--) {
-            int minOfTwo = Math.min(array[left + i], array[right - i]);
-            int maxOfTwo = Math.max(array[left + i], array[right - i]);
-            array[left + i] = maxOfTwo;
-            array[right - i] = minOfTwo;
-        }
+    static int[] doQuicksort(int[] array, int left, int right) {
+        if (left < right) {
+            int basicElement = array[(left + right) / 2];
+            int i = left;
+            int j = right;
 
-        int basicElement = (array[left] + array[right]) / 2;
+            while (i <= j) {
+                while (array[i] < basicElement) {
+                    i++;
+                }
 
-        for (int i = left; i < right; i++) {
-            for (int j = right; j > left; j--) {
-                if (array[j] <= basicElement) {
-                    if (i <= j) {
-                        int minOfTwo = Math.min(array[i], array[i + 1]);
-                        int maxOfTwo = Math.max(array[i], array[i + 1]);
-                        array[i] = minOfTwo;
-                        array[i + 1] = maxOfTwo;
-                    }
+                while (array[j] > basicElement) {
+                    j--;
+                }
+
+                if (i <= j) {
+                    int temp = array[i];
+                    array[i] = array[j];
+                    array[j] = temp;
+                    i++;
+                    j--;
                 }
             }
+            doQuicksort(array, left, j);
+            doQuicksort(array, i, right);
         }
 
         return array;
     }
+//    static int findBasicElement(int[] array) {
+//        int left = 0;
+//        int right = array.length - 1;
+//
+//        for (int i = left; i < right; i++) {
+//            int minOfTwo = Math.min(array[i], array[i + 1]);
+//            int maxOfTwo = Math.max(array[i], array[i + 1]);
+//            array[i] = minOfTwo;
+//            array[i + 1] = maxOfTwo;
+//        }
+//
+//        for (int i = right; i > left + 1; i--) {
+//            int minOfTwo = Math.min(array[left + i], array[right - i]);
+//            int maxOfTwo = Math.max(array[left + i], array[right - i]);
+//            array[left + i] = maxOfTwo;
+//            array[right - i] = minOfTwo;
+//        }
+//
+//        return (array[left] + array[right]) / 2;
+//    }
 
     /**
      * Создайте массив случайных целых чисел из 1 000 элементов и сравните время,
@@ -170,7 +192,7 @@ public class Task17 {
         long quickSort = finishTime - startTime;
         System.out.println("Время быстрой сортировкой на 1000 элементов: " + quickSort + " мс.");
 
-        return quickSort - bubble;
+        return bubble - quickSort;
     }
 
     /**
@@ -193,7 +215,7 @@ public class Task17 {
     }
 
     static int[] getRandomArray(int length) {
-        int[]randomArray = new int [length];
+        int[] randomArray = new int[length];
         int x1 = -1_000_000;
         int x2 = 1_000_000;
 
