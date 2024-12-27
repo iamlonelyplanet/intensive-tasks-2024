@@ -27,10 +27,15 @@ public class Task17 {
         int[] array2 = {5, 1, 0, 3, -18, 44, 2, 0, 5, -5, 6};
         System.out.println("Результат пузырьковой сортировки: " + Arrays.toString(sortByBubble(array)));
         System.out.println("Результат QuickSort: " + Arrays.toString(sortByQuicksort(array2)));
-        System.out.println("Это быстрее на " + getBenchmarkOn1000() + " мс.");
-        System.out.println("Это быстрее на " + getBenchmarkOn10000() + " мс.");
-        System.out.println("Если результат отрицательный, то алгоритм КвикСорт медленнее пузырькового");
+        long benchmarkOn1000 = getBenchmarkOn1000();
+        long benchmarkOn10000 = getBenchmarkOn10000();
+        System.out.println("Это быстрее пузырькового на " + benchmarkOn1000 + " мс.");
+        System.out.println("Это быстрее пузырькового на " + benchmarkOn10000 + " мс.");
+        if (benchmarkOn1000 <= 0 || benchmarkOn10000 <= 0) {
+            System.out.println("Результат отрицательный, значит, я накосячил, т.к. QuickSort по определению должен " +
+                    "быть быстрее пузырькового");
 
+        }
     }
 
     /**
@@ -54,12 +59,7 @@ public class Task17 {
         }
 
         for (int i = 0; i < array.length - 1; i++) {
-            for (int j = 0; j < array.length - 1; j++) {
-                int minOfTwo = Math.min(array[j], array[j + 1]);
-                int maxOfTwo = Math.max(array[j], array[j + 1]);
-                array[j] = minOfTwo;
-                array[j + 1] = maxOfTwo;
-            }
+            findMax(array);
         }
 
         return array;
@@ -105,69 +105,80 @@ public class Task17 {
      *      Если длина входного массива меньше двух, выходим.
      * </ol>
      */
-    static int[] sortByQuicksort(int[] array) {
+    static int[] sortByQuicksort(int[] array, int... borders) {
         if (array == null) {
             return new int[0];
         }
 
-        if (array.length < 2) {
+        int left = 0;
+        int right = array.length - 1;
+
+        if (borders.length != 0) {
+            left = borders[0];
+            right = borders[1];
+        }
+
+        if (left >= right) {
             return array;
         }
 
-        doQuicksort(array, 0, array.length - 1);
+        int basicValue = (findMin(array, left, right) + findMax(array, left, right)) / 2;
+        int i = left;
+        int j = right;
 
-        return array;
-    }
-
-    static int[] doQuicksort(int[] array, int left, int right) {
-        if (left < right) {
-            int basicElement = array[(left + right) / 2];
-            int i = left;
-            int j = right;
-
-            while (i <= j) {
-                while (array[i] < basicElement) {
-                    i++;
-                }
-
-                while (array[j] > basicElement) {
-                    j--;
-                }
-
-                if (i <= j) {
-                    int temp = array[i];
-                    array[i] = array[j];
-                    array[j] = temp;
-                    i++;
-                    j--;
-                }
+        while (i <= j) {
+            while (array[i] < basicValue) {
+                i++;
             }
-            doQuicksort(array, left, j);
-            doQuicksort(array, i, right);
+
+            while (array[j] > basicValue) {
+                j--;
+            }
+
+            if (i <= j) {
+                int temp = array[i];
+                array[i] = array[j];
+                array[j] = temp;
+                i++;
+                j--;
+            }
         }
 
+        sortByQuicksort(array, left, j);
+        sortByQuicksort(array, i, right);
+
         return array;
     }
-//    static int findBasicElement(int[] array) {
-//        int left = 0;
-//        int right = array.length - 1;
-//
-//        for (int i = left; i < right; i++) {
-//            int minOfTwo = Math.min(array[i], array[i + 1]);
-//            int maxOfTwo = Math.max(array[i], array[i + 1]);
-//            array[i] = minOfTwo;
-//            array[i + 1] = maxOfTwo;
-//        }
-//
-//        for (int i = right; i > left + 1; i--) {
-//            int minOfTwo = Math.min(array[left + i], array[right - i]);
-//            int maxOfTwo = Math.max(array[left + i], array[right - i]);
-//            array[left + i] = maxOfTwo;
-//            array[right - i] = minOfTwo;
-//        }
-//
-//        return (array[left] + array[right]) / 2;
-//    }
+
+    static int findMin(int[] array, int left, int right) {
+        for (int i = left; i < right; i++) {
+            int minOfTwo = Math.min(array[i], array[i + 1]);
+            int maxOfTwo = Math.max(array[i], array[i + 1]);
+            array[i] = maxOfTwo;
+            array[i + 1] = minOfTwo;
+        }
+
+        return array[right];
+    }
+
+    static int findMax(int[] array, int... borders) {
+        int left = 0;
+        int right = array.length - 1;
+
+        if (borders.length != 0) {
+            left = borders[0];
+            right = borders[1];
+        }
+
+        for (int i = left; i < right; i++) {
+            int minOfTwo = Math.min(array[i], array[i + 1]);
+            int maxOfTwo = Math.max(array[i], array[i + 1]);
+            array[i] = minOfTwo;
+            array[i + 1] = maxOfTwo;
+        }
+
+        return array[right];
+    }
 
     /**
      * Создайте массив случайных целых чисел из 1 000 элементов и сравните время,
@@ -199,7 +210,7 @@ public class Task17 {
      * Повторите предыдущие вычисления из метода getBenchmarkOn1000() для массива в 10 000 элементов.
      */
     static long getBenchmarkOn10000() {
-        int[] array = getRandomArray(20000);
+        int[] array = getRandomArray(10000);
 
         long startTime = System.currentTimeMillis();
         sortByBubble(array);
@@ -226,27 +237,5 @@ public class Task17 {
         }
 
         return randomArray;
-    }
-
-    static int getFirstIndex(int[] arr, int value) {
-        for (int i = 0; i < arr.length; i++) {
-            if (value == arr[i]) {
-
-                return i;
-            }
-        }
-
-        return -1;
-    }
-
-    static int getLastIndex(int[] arr, int value) {
-        for (int i = arr.length - 1; i >= 0; i--) {
-            if (arr[i] == value) {
-
-                return i;
-            }
-        }
-
-        return -1;
     }
 }
