@@ -215,12 +215,12 @@ public class Task17 {
         long startTime = System.currentTimeMillis();
         sortByBubble(array);
         long bubble = System.currentTimeMillis() - startTime;
-        System.out.println("Время пузырьком на 10000 элементов: " + bubble + " мс.");
+        System.out.println("Время пузырьком на 1 тысячу элементов: " + bubble + " мс.");
 
         startTime = System.currentTimeMillis();
         sortByQuicksort(array);
         long quickSort = System.currentTimeMillis() - startTime;
-        System.out.println("Время быстрой сортировкой на 10000 элементов: " + quickSort + " мс.");
+        System.out.println("Время быстрой сортировкой на 10 тыщ элементов: " + quickSort + " мс.");
 
         return bubble - quickSort;
     }
