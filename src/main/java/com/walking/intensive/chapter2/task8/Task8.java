@@ -1,7 +1,5 @@
 package com.walking.intensive.chapter2.task8;
 
-import java.util.Arrays;
-
 /*
  Старое решение задачи (метод getHappyTicketChanceOld) - перебор 1 млн билетных номеров с целью подсчитать сумму цифр
  первых трёх и трёх последних цифр шестизначного числа. Ведь массивы нельзя было использовать!
@@ -24,9 +22,9 @@ if (s >= sums.length) {
 
  Вопросы:
  1. Верно ли, что алгоритмическая сложность этого решения значительно ниже, чем старого?
- 2. Так и не смог получить идеально совпадающие вероятности. По-моему, проблема в том, что для прохождения теста
- требуется метод double, а мне нужен метод типа float. В консоль-то я понял, как выводить нужное значение. А как пройти
- тест?
+ 2. Так и не смог получить идеально совпадающие вероятности. По новому решению это 0.055251999999999996.
+  В консоль-то я понял, как выводить нужное значение -  привести к float.
+  А как пройти тест?
 
  Большое спасибо!
 
@@ -52,7 +50,7 @@ if (s >= sums.length) {
  */
 public class Task8 {
     public static void main(String[] args) {
-        System.out.println((float) getHappyTicketChance());
+        System.out.println(getHappyTicketChance());
         System.out.println(getHappyTicketChanceOld());
     }
 
@@ -66,9 +64,9 @@ public class Task8 {
             sums[s] += 1;
         }
 
-        float chance = 0;
-        for (float sum14 : sums) {
-            chance += (float) (Math.pow((sum14 / 1000), 2) / 2);
+        double chance = 0;
+        for (double sum : sums) {
+            chance += (Math.pow((sum / 1000.0), 2) / 2);
         }
 
         return chance;
