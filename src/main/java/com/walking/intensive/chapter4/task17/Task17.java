@@ -32,9 +32,8 @@ public class Task17 {
         System.out.println("Это быстрее пузырькового на " + benchmarkOn1000 + " мс.");
         System.out.println("Это быстрее пузырькового на " + benchmarkOn10000 + " мс.");
         if (benchmarkOn1000 <= 0 || benchmarkOn10000 <= 0) {
-            System.out.println("Результат отрицательный, значит, я накосячил, т.к. QuickSort по определению должен " +
-                    "быть быстрее пузырькового");
-
+            System.out.println("Результат отрицательный - значит, я накосячил, т.к. QuickSort по определению должен "
+                   + "быть быстрее пузырькового");
         }
     }
 
@@ -54,12 +53,16 @@ public class Task17 {
      * </ol>
      */
     static int[] sortByBubble(int[] array) {
-        if (array == null) {
+        if (!isValid(array)) {
             return new int[0];
         }
 
-        for (int i = 0; i < array.length - 1; i++) {
-            findMax(array);
+        for (int right = array.length - 1; right > 0; right--) {
+            for (int i = 0; i < right; i++) {
+                if (array[i] > array[i + 1]) {
+                    swap(array, i);
+                }
+            }
         }
 
         return array;
@@ -105,21 +108,19 @@ public class Task17 {
      *      Если длина входного массива меньше двух, выходим.
      * </ol>
      */
-    static int[] sortByQuicksort(int[] array, int... borders) {
-        if (array == null) {
+    static int[] sortByQuicksort(int[] array) {
+        if (!isValid(array)) {
             return new int[0];
         }
 
-        int left = 0;
-        int right = array.length - 1;
+        sortByQuicksortWithBorders(array, 0, array.length - 1);
 
-        if (borders.length != 0) {
-            left = borders[0];
-            right = borders[1];
-        }
+        return array;
+    }
 
+    static void sortByQuicksortWithBorders(int[] array, int left, int right) {
         if (left >= right) {
-            return array;
+            return;
         }
 
         int basicValue = (findMin(array, left, right) + findMax(array, left, right)) / 2;
@@ -144,37 +145,32 @@ public class Task17 {
             }
         }
 
-        sortByQuicksort(array, left, j);
-        sortByQuicksort(array, i, right);
+        sortByQuicksortWithBorders(array, left, j);
+        sortByQuicksortWithBorders(array, i, right);
 
-        return array;
+    }
+
+    static void swap(int[] array, int i) {
+        array[i + 1] = array[i + 1] + array[i];
+        array[i] = array[i + 1] - array[i];
+        array[i + 1] = array[i + 1] - array[i];
     }
 
     static int findMin(int[] array, int left, int right) {
         for (int i = left; i < right; i++) {
-            int minOfTwo = Math.min(array[i], array[i + 1]);
-            int maxOfTwo = Math.max(array[i], array[i + 1]);
-            array[i] = maxOfTwo;
-            array[i + 1] = minOfTwo;
+            if (array[i] < array[i + 1]) {
+                swap(array, i);
+            }
         }
 
         return array[right];
     }
 
-    static int findMax(int[] array, int... borders) {
-        int left = 0;
-        int right = array.length - 1;
-
-        if (borders.length != 0) {
-            left = borders[0];
-            right = borders[1];
-        }
-
+    static int findMax(int[] array, int left, int right) {
         for (int i = left; i < right; i++) {
-            int minOfTwo = Math.min(array[i], array[i + 1]);
-            int maxOfTwo = Math.max(array[i], array[i + 1]);
-            array[i] = minOfTwo;
-            array[i + 1] = maxOfTwo;
+            if (array[i] > array[i + 1]) {
+                swap(array, i);
+            }
         }
 
         return array[right];
@@ -193,17 +189,15 @@ public class Task17 {
 
         long startTime = System.currentTimeMillis();
         sortByBubble(array);
-        long finishTime = System.currentTimeMillis();
-        long bubble = finishTime - startTime;
-        System.out.println("Время пузырьком на 1000 элементов: " + bubble + " мс.");
+        long bubbleTime = System.currentTimeMillis() - startTime;
+        System.out.println("Время пузырьком на 1000 элементов: " + bubbleTime + " мс.");
 
         startTime = System.currentTimeMillis();
         sortByQuicksort(array);
-        finishTime = System.currentTimeMillis();
-        long quickSort = finishTime - startTime;
-        System.out.println("Время быстрой сортировкой на 1000 элементов: " + quickSort + " мс.");
+        long quicksortTime = System.currentTimeMillis() - startTime;
+        System.out.println("Время быстрой сортировкой на 1000 элементов: " + quicksortTime + " мс.");
 
-        return bubble - quickSort;
+        return bubbleTime - quicksortTime;
     }
 
     /**
@@ -214,15 +208,19 @@ public class Task17 {
 
         long startTime = System.currentTimeMillis();
         sortByBubble(array);
-        long bubble = System.currentTimeMillis() - startTime;
-        System.out.println("Время пузырьком на 1 тысячу элементов: " + bubble + " мс.");
+        long bubbleTime = System.currentTimeMillis() - startTime;
+        System.out.println("Время пузырьком на 10 тыщ элементов: " + bubbleTime + " мс.");
 
         startTime = System.currentTimeMillis();
         sortByQuicksort(array);
-        long quickSort = System.currentTimeMillis() - startTime;
-        System.out.println("Время быстрой сортировкой на 10 тыщ элементов: " + quickSort + " мс.");
+        long quicksortTime = System.currentTimeMillis() - startTime;
+        System.out.println("Время быстрой сортировкой на 10 тыщ элементов: " + quicksortTime + " мс.");
 
-        return bubble - quickSort;
+        return bubbleTime - quicksortTime;
+    }
+
+    static boolean isValid(int[] array) {
+        return (array != null);
     }
 
     static int[] getRandomArray(int length) {
