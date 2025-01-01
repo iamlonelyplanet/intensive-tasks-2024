@@ -62,10 +62,12 @@ public class Task18 {
             return -1;
         }
 
-        return find(girlAges, targetAge, 0, girlAges.length - 1);
+        int[] borders = {0, girlAges.length - 1};
+
+        return findWithRecursion(girlAges, borders, targetAge);
     }
 
-    static int find(int[] girlAges, int targetAge, int... borders) {
+    static int findWithRecursion(int[] girlAges, int[] borders, int targetAge) {
         int middleIndex = (borders[0] + borders[1]) / 2;
         if (girlAges[middleIndex] == targetAge) {
             return girlAges[middleIndex];
@@ -81,6 +83,6 @@ public class Task18 {
             return girlAges[middleIndex];
         }
 
-        return find(girlAges, targetAge, borders);
+        return findWithRecursion(girlAges, borders, targetAge);
     }
 }
