@@ -33,7 +33,7 @@ public class Task17 {
         System.out.println("Это быстрее пузырькового на " + benchmarkOn10000 + " мс.");
         if (benchmarkOn1000 <= 0 || benchmarkOn10000 <= 0) {
             System.out.println("Результат отрицательный - значит, я накосячил, т.к. QuickSort по определению должен "
-                   + "быть быстрее пузырькового");
+                    + "быть быстрее пузырькового");
         }
     }
 
@@ -149,7 +149,7 @@ public class Task17 {
     }
 
     static void swap(int[] array, int i, int j) {
-        // Проверяем, т.к. метод swap работает и для пузырька (i != j), и для QuickSort (i == j - может          быть).
+        // Проверяем, т.к. метод swap работает и для пузырька (i != j), и для QuickSort (i == j - может быть).
         if (i == j) {
             return;
         }
