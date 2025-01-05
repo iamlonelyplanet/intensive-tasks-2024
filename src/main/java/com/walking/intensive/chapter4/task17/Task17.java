@@ -60,7 +60,7 @@ public class Task17 {
         for (int right = array.length - 1; right > 0; right--) {
             for (int i = 0; i < right; i++) {
                 if (array[i] > array[i + 1]) {
-                    swap(array, i);
+                    swap(array, i, i + 1);
                 }
             }
         }
@@ -137,9 +137,7 @@ public class Task17 {
             }
 
             if (i <= j) {
-                int temp = array[i];
-                array[i] = array[j];
-                array[j] = temp;
+                swap(array, i, j);
                 i++;
                 j--;
             }
@@ -150,16 +148,22 @@ public class Task17 {
 
     }
 
-    static void swap(int[] array, int i) {
-        array[i + 1] = array[i + 1] + array[i];
-        array[i] = array[i + 1] - array[i];
-        array[i + 1] = array[i + 1] - array[i];
+    static void swap(int[] array, int i, int j) {
+        // Проверяем, т.к. метод swap работает и для пузырька (i != j), и для QuickSort (i == j - может          быть).
+        if (i == j) {
+            return;
+        }
+
+        // Лениво использовать временную переменную, ведь я знаю чит без её использования из чуть ли не первого урока!
+        array[j] = array[j] + array[i];
+        array[i] = array[j] - array[i];
+        array[j] = array[j] - array[i];
     }
 
     static int findMin(int[] array, int left, int right) {
         for (int i = left; i < right; i++) {
             if (array[i] < array[i + 1]) {
-                swap(array, i);
+                swap(array, i, i + 1);
             }
         }
 
@@ -169,7 +173,7 @@ public class Task17 {
     static int findMax(int[] array, int left, int right) {
         for (int i = left; i < right; i++) {
             if (array[i] > array[i + 1]) {
-                swap(array, i);
+                swap(array, i, i + 1);
             }
         }
 
